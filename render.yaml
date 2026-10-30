@@ -1,0 +1,32 @@
+# Render 蓝本（Blueprint）：在 Render 里关联本仓库即可一键部署。
+# 默认使用「免费实例」（无需信用卡、无费用），但免费实例**没有持久磁盘**：
+# 数据会在重新部署 / 重启 / 休眠后清空，适合演示与试跑。
+#
+# 要持久保存用户数据（账号、日程等），请：
+#   1. 把下方 `plan: free` 改为 `plan: starter`
+#   2. 取消 `disk` 区块的注释（1GB ≈ $0.25/月，Starter $7/月）
+# 然后在 Render 控制台确认费用后部署。
+
+services:
+  - type: web
+    name: campus-schedule
+    runtime: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /login
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: APP_SECRET
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /app/data/app.db
+      - key: UPLOAD_DIR
+        value: /app/data/uploads
+    # 持久磁盘（需付费 Starter 实例，取消注释后启用）：
+    # disk:
+    #   name: data
+    #   mountPath: /app/data
+    #   sizeGB: 1

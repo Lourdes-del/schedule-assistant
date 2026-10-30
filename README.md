@@ -23,7 +23,7 @@
 | 测试 | Node 内置 test runner + `tsx` |
 | AI | 服务端封装 OpenAI 兼容协议（DeepSeek 优先），密钥 AES-256-GCM 加密存储 |
 
-> 依赖 Node.js ≥ 22.5（使用了内置 `node:sqlite`）。
+> 依赖 Node.js ≥ 24（使用了内置 `node:sqlite`，开箱即用；更低版本需 `--experimental-sqlite` 标志）。
 
 ## 目录结构
 
@@ -102,7 +102,16 @@ npm test           # 运行测试
 
 ## 部署
 
-应用可部署到任意支持 Node.js 的托管平台。关键点：设置 `APP_SECRET`、把数据目录 `data/` 挂到持久化卷、Node 版本 ≥ 22.5。
+应用可部署到任意支持 Node.js 的托管平台。关键点：设置 `APP_SECRET`、把数据目录 `data/` 挂到持久化卷、Node 版本 ≥ 24。
+
+### Render（一键部署，推荐）
+
+仓库已包含 `render.yaml` 蓝本与 `.node-version`，在 [Render](https://render.com) 里选择 **New → Blueprint**、关联本仓库即可一键部署。
+
+- **免费实例（默认）**：`plan: free`，无需信用卡、无费用，适合先跑起来看效果。**注意：免费实例没有持久磁盘**，数据会在重新部署 / 重启 / 休眠后清空。
+- **持久化（正式使用）**：把 `render.yaml` 中 `plan` 改为 `starter` 并取消 `disk` 区块注释（Starter $7/月 + 1GB 磁盘 $0.25/月 ≈ $7.25/月），数据即可持久保存。
+
+`APP_SECRET` 已配置为自动生成；`DATABASE_PATH` / `UPLOAD_DIR` 指向磁盘挂载点 `/app/data`。
 
 ### Docker
 
